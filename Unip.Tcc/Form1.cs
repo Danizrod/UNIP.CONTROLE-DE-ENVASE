@@ -6,9 +6,6 @@ namespace Unip.Tcc
 
     public partial class Form1 : Form
     {
-        State _state = State.Zerado;
-        decimal _initialTimer = 0;
-        public System.Windows.Forms.Timer aTimer = new();
         public Form1()
         {
             InitializeComponent();
@@ -19,9 +16,19 @@ namespace Unip.Tcc
             pnlNav.Left = btnDashboard.Left;
             btnDashboard.BackColor = Color.FromArgb(46, 51, 73);
 
-            aTimer.Tick += CallTimer;
-            aTimer.Interval = 1000;
-            aTimer.Enabled = true;
+            lblInicio.Text = "Inicio";
+            PnlFormLoader.Controls.Clear();
+            frmInicio FrmDashboard_Vrb = new()
+            {
+                Dock = DockStyle.Fill,
+                TopLevel = false,
+                TopMost = true,
+                FormBorderStyle = FormBorderStyle.None
+            };
+            PnlFormLoader.Controls.Add(FrmDashboard_Vrb);
+            FrmDashboard_Vrb.Show();
+
+            
         }
 
         #region Configurações Visuais
@@ -42,6 +49,17 @@ namespace Unip.Tcc
             pnlNav.Left = btnDashboard.Left;
             btnDashboard.BackColor = Color.FromArgb(46, 51, 73);
 
+            lblInicio.Text = "Inicio";
+            PnlFormLoader.Controls.Clear();
+            frmInicio FrmDashboard_Vrb = new()
+            {
+                Dock = DockStyle.Fill,
+                TopLevel = false,
+                TopMost = true,
+                FormBorderStyle = FormBorderStyle.None
+            };
+            PnlFormLoader.Controls.Add(FrmDashboard_Vrb);
+            FrmDashboard_Vrb.Show();
         }
 
         private void btnAnalytics_Click(object sender, EventArgs e)
@@ -49,6 +67,18 @@ namespace Unip.Tcc
             pnlNav.Height = btnAnalytics.Height;
             pnlNav.Top = btnAnalytics.Top;
             btnAnalytics.BackColor = Color.FromArgb(46, 51, 73);
+
+            lblInicio.Text = "Estatísticas";
+            PnlFormLoader.Controls.Clear();
+            frmEstatisticas FrmDashboard_Vrb = new()
+            {
+                Dock = DockStyle.Fill,
+                TopLevel = false,
+                TopMost = true,
+                FormBorderStyle = FormBorderStyle.None
+            };
+            PnlFormLoader.Controls.Add(FrmDashboard_Vrb);
+            FrmDashboard_Vrb.Show();
         }
 
         private void btnCalendar_Click(object sender, EventArgs e)
@@ -56,6 +86,18 @@ namespace Unip.Tcc
             pnlNav.Height = btnCalendar.Height;
             pnlNav.Top = btnCalendar.Top;
             btnCalendar.BackColor = Color.FromArgb(46, 51, 73);
+
+            lblInicio.Text = "Atividade";
+            PnlFormLoader.Controls.Clear();
+            frmAtividade FrmDashboard_Vrb = new()
+            {
+                Dock = DockStyle.Fill,
+                TopLevel = false,
+                TopMost = true,
+                FormBorderStyle = FormBorderStyle.None
+            };
+            PnlFormLoader.Controls.Add(FrmDashboard_Vrb);
+            FrmDashboard_Vrb.Show();
         }
 
         private void btnContact_Click(object sender, EventArgs e)
@@ -63,6 +105,18 @@ namespace Unip.Tcc
             pnlNav.Height = btnContact.Height;
             pnlNav.Top = btnContact.Top;
             btnContact.BackColor = Color.FromArgb(46, 51, 73);
+
+            lblInicio.Text = "Contato";
+            PnlFormLoader.Controls.Clear();
+            frmContato FrmDashboard_Vrb = new()
+            {
+                Dock = DockStyle.Fill,
+                TopLevel = false,
+                TopMost = true,
+                FormBorderStyle = FormBorderStyle.None
+            };
+            PnlFormLoader.Controls.Add(FrmDashboard_Vrb);
+            FrmDashboard_Vrb.Show();
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
@@ -70,6 +124,18 @@ namespace Unip.Tcc
             pnlNav.Height = btnSettings.Height;
             pnlNav.Top = btnSettings.Top;
             btnSettings.BackColor = Color.FromArgb(46, 51, 73);
+
+            lblInicio.Text = "Configurações";
+            PnlFormLoader.Controls.Clear();
+            frmConfig FrmDashboard_Vrb = new()
+            {
+                Dock = DockStyle.Fill,
+                TopLevel = false,
+                TopMost = true,
+                FormBorderStyle = FormBorderStyle.None
+            };
+            PnlFormLoader.Controls.Add(FrmDashboard_Vrb);
+            FrmDashboard_Vrb.Show();
         }
 
         private void btnDashboard_Leave(object sender, EventArgs e)
@@ -98,40 +164,9 @@ namespace Unip.Tcc
         }
         #endregion
 
-        private void Cronometro_Click(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e)
         {
-            _state = State.Funcionando;
+            Application.Exit();
         }
-
-        private void Stop_Click(object sender, EventArgs e)
-        {
-            _state = State.Zerado;
-        }
-
-        private void CallTimer(object sender, EventArgs e)
-        {
-            UpdateTimer();
-        }
-
-        private void UpdateTimer()
-        {
-            if (_state.Equals(State.Funcionando))
-            {
-                _initialTimer += 1;
-            }
-            else
-            {
-                _initialTimer = 0;
-            }
-
-            label2.Text = string.Format(_initialTimer.ToString());
-        }
-    }
-
-    public enum State
-    {
-        Zerado,
-        Funcionando,
-        Pausado
     }
 }
