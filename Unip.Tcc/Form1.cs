@@ -298,7 +298,7 @@ namespace Unip.Tcc
         }  
         #endregion
 
-        #region Configurações de LEDs
+        #region Configurações de Funções p/ Arduino
         private void Led1CheckboxClicked(object sender, EventArgs e)
 
         {

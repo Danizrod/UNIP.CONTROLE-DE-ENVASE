@@ -33,9 +33,7 @@ boolean stringComplete = false;
 void setup()
 {
     Serial.begin(9600);
-    // pinMode(rele, OUTPUT);
-
-    // atuadorA inicia avançado
+    
     digitalWrite(esteira2, LOW);
     digitalWrite(atuadorA, HIGH);
     digitalWrite(atuadorB, HIGH);
