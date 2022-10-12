@@ -1,6 +1,6 @@
 ﻿namespace Unip.Tcc
 {
-    partial class Form1
+    partial class frmPrincipal
     {
         /// <summary>
         ///  Required designer variable.
@@ -30,7 +30,6 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlNav = new System.Windows.Forms.Panel();
-            this.btnSettings = new System.Windows.Forms.Button();
             this.btnContact = new System.Windows.Forms.Button();
             this.btnCalendar = new System.Windows.Forms.Button();
             this.btnAnalytics = new System.Windows.Forms.Button();
@@ -52,9 +51,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.garrafa300mL = new System.Windows.Forms.CheckBox();
             this.garrafa200mL = new System.Windows.Forms.CheckBox();
-            this.led3 = new System.Windows.Forms.CheckBox();
-            this.led2 = new System.Windows.Forms.CheckBox();
-            this.led1 = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -68,7 +64,6 @@
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(30)))), ((int)(((byte)(54)))));
             this.panel1.Controls.Add(this.pnlNav);
-            this.panel1.Controls.Add(this.btnSettings);
             this.panel1.Controls.Add(this.btnContact);
             this.panel1.Controls.Add(this.btnCalendar);
             this.panel1.Controls.Add(this.btnAnalytics);
@@ -88,23 +83,6 @@
             this.pnlNav.Size = new System.Drawing.Size(3, 100);
             this.pnlNav.TabIndex = 12;
             // 
-            // btnSettings
-            // 
-            this.btnSettings.FlatAppearance.BorderSize = 0;
-            this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSettings.Font = new System.Drawing.Font("Nirmala UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(126)))), ((int)(((byte)(249)))));
-            this.btnSettings.Image = global::Unip.Tcc.Properties.Resources.settings;
-            this.btnSettings.Location = new System.Drawing.Point(0, 535);
-            this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(186, 42);
-            this.btnSettings.TabIndex = 11;
-            this.btnSettings.Text = "Configurações";
-            this.btnSettings.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
-            this.btnSettings.UseVisualStyleBackColor = true;
-            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
-            this.btnSettings.Leave += new System.EventHandler(this.btnSettings_Leave);
-            // 
             // btnContact
             // 
             this.btnContact.Dock = System.Windows.Forms.DockStyle.Top;
@@ -120,8 +98,8 @@
             this.btnContact.Text = "Contato";
             this.btnContact.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.btnContact.UseVisualStyleBackColor = true;
-            this.btnContact.Click += new System.EventHandler(this.btnContact_Click);
-            this.btnContact.Leave += new System.EventHandler(this.btnContact_Leave);
+            this.btnContact.Click += new System.EventHandler(this.BtnContact_Click);
+            this.btnContact.Leave += new System.EventHandler(this.BtnContact_Leave);
             // 
             // btnCalendar
             // 
@@ -138,8 +116,8 @@
             this.btnCalendar.Text = "Atividade";
             this.btnCalendar.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.btnCalendar.UseVisualStyleBackColor = true;
-            this.btnCalendar.Click += new System.EventHandler(this.btnCalendar_Click);
-            this.btnCalendar.Leave += new System.EventHandler(this.btnCalendar_Leave);
+            this.btnCalendar.Click += new System.EventHandler(this.BtnCalendar_Click);
+            this.btnCalendar.Leave += new System.EventHandler(this.BtnCalendar_Leave);
             // 
             // btnAnalytics
             // 
@@ -156,8 +134,8 @@
             this.btnAnalytics.Text = "Estatísticas";
             this.btnAnalytics.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.btnAnalytics.UseVisualStyleBackColor = true;
-            this.btnAnalytics.Click += new System.EventHandler(this.btnAnalytics_Click);
-            this.btnAnalytics.Leave += new System.EventHandler(this.btnAnalytics_Leave);
+            this.btnAnalytics.Click += new System.EventHandler(this.BtnAnalytics_Click);
+            this.btnAnalytics.Leave += new System.EventHandler(this.BtnAnalytics_Leave);
             // 
             // btnDashboard
             // 
@@ -174,8 +152,8 @@
             this.btnDashboard.Text = "Início";
             this.btnDashboard.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.btnDashboard.UseVisualStyleBackColor = true;
-            this.btnDashboard.Click += new System.EventHandler(this.btnDashboard_Click);
-            this.btnDashboard.Leave += new System.EventHandler(this.btnDashboard_Leave);
+            this.btnDashboard.Click += new System.EventHandler(this.BtnDashboard_Click);
+            this.btnDashboard.Leave += new System.EventHandler(this.BtnDashboard_Leave);
             // 
             // panel2
             // 
@@ -195,9 +173,9 @@
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(158)))), ((int)(((byte)(161)))), ((int)(((byte)(178)))));
             this.label5.Location = new System.Drawing.Point(38, 109);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(114, 12);
+            this.label5.Size = new System.Drawing.Size(118, 12);
             this.label5.TabIndex = 8;
-            this.label5.Text = "Esteira Automatizada";
+            this.label5.Text = "Supervisão de Envase";
             // 
             // label4
             // 
@@ -307,7 +285,7 @@
             this.groupBox2.Size = new System.Drawing.Size(203, 138);
             this.groupBox2.TabIndex = 12;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Conexão Serial";
+            this.groupBox2.Text = "Conexão";
             // 
             // comboBox1
             // 
@@ -342,7 +320,7 @@
             this.groupBox1.Size = new System.Drawing.Size(239, 138);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Controle de LED";
+            this.groupBox1.Text = "Setup";
             // 
             // garrafa300mL
             // 
@@ -368,39 +346,6 @@
             this.garrafa200mL.UseVisualStyleBackColor = true;
             this.garrafa200mL.CheckedChanged += new System.EventHandler(this.Garrafa200mLChecked);
             // 
-            // led3
-            // 
-            this.led3.AutoSize = true;
-            this.led3.Location = new System.Drawing.Point(828, 209);
-            this.led3.Name = "led3";
-            this.led3.Size = new System.Drawing.Size(52, 19);
-            this.led3.TabIndex = 2;
-            this.led3.Text = "LED3";
-            this.led3.UseVisualStyleBackColor = true;
-            this.led3.CheckedChanged += new System.EventHandler(this.Led3CheckboxClicked);
-            // 
-            // led2
-            // 
-            this.led2.AutoSize = true;
-            this.led2.Location = new System.Drawing.Point(828, 188);
-            this.led2.Name = "led2";
-            this.led2.Size = new System.Drawing.Size(52, 19);
-            this.led2.TabIndex = 1;
-            this.led2.Text = "LED2";
-            this.led2.UseVisualStyleBackColor = true;
-            this.led2.CheckedChanged += new System.EventHandler(this.Led2CheckboxClicked);
-            // 
-            // led1
-            // 
-            this.led1.AutoSize = true;
-            this.led1.Location = new System.Drawing.Point(828, 172);
-            this.led1.Name = "led1";
-            this.led1.Size = new System.Drawing.Size(52, 19);
-            this.led1.TabIndex = 0;
-            this.led1.Text = "LED1";
-            this.led1.UseVisualStyleBackColor = true;
-            this.led1.CheckedChanged += new System.EventHandler(this.Led1CheckboxClicked);
-            // 
             // groupBox3
             // 
             this.groupBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(42)))), ((int)(((byte)(64)))));
@@ -425,9 +370,6 @@
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.led3);
-            this.Controls.Add(this.led2);
-            this.Controls.Add(this.led1);
             this.Controls.Add(this.PnlFormLoader);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.lblInicio);
@@ -453,7 +395,6 @@
 
         #endregion
         private Panel panel1;
-        private Button btnSettings;
         private Button btnContact;
         private Button btnCalendar;
         private Button btnAnalytics;
@@ -474,9 +415,6 @@
         private ComboBox comboBox1;
         private Button connect;
         private GroupBox groupBox1;
-        private CheckBox led3;
-        private CheckBox led2;
-        private CheckBox led1;
         private CheckBox garrafa300mL;
         private CheckBox garrafa200mL;
         private GroupBox groupBox3;

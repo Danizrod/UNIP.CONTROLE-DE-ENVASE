@@ -5,7 +5,7 @@ namespace Unip.Tcc
 {
 
 
-    public partial class Form1 : Form
+    public partial class frmPrincipal : Form
     {
         #region Cronômetro
         State _state = State.Zerado;
@@ -19,7 +19,7 @@ namespace Unip.Tcc
         SerialPort port;
         #endregion
 
-        public Form1()
+        public frmPrincipal()
         {
             InitializeComponent();
 
@@ -78,7 +78,7 @@ namespace Unip.Tcc
         int nWidthEllipse,
         int nHightEllipse);
 
-        private void btnDashboard_Click(object sender, EventArgs e)
+        private void BtnDashboard_Click(object sender, EventArgs e)
         {
             pnlNav.Height = btnDashboard.Height;
             pnlNav.Top = btnDashboard.Top;
@@ -98,7 +98,7 @@ namespace Unip.Tcc
             FrmDashboard_Vrb.Show();
         }
 
-        private void btnAnalytics_Click(object sender, EventArgs e)
+        private void BtnAnalytics_Click(object sender, EventArgs e)
         {
             pnlNav.Height = btnAnalytics.Height;
             pnlNav.Top = btnAnalytics.Top;
@@ -117,7 +117,7 @@ namespace Unip.Tcc
             FrmDashboard_Vrb.Show();
         }
 
-        private void btnCalendar_Click(object sender, EventArgs e)
+        private void BtnCalendar_Click(object sender, EventArgs e)
         {
             pnlNav.Height = btnCalendar.Height;
             pnlNav.Top = btnCalendar.Top;
@@ -136,7 +136,7 @@ namespace Unip.Tcc
             FrmDashboard_Vrb.Show();
         }
 
-        private void btnContact_Click(object sender, EventArgs e)
+        private void BtnContact_Click(object sender, EventArgs e)
         {
             pnlNav.Height = btnContact.Height;
             pnlNav.Top = btnContact.Top;
@@ -155,48 +155,24 @@ namespace Unip.Tcc
             FrmDashboard_Vrb.Show();
         }
 
-        private void btnSettings_Click(object sender, EventArgs e)
-        {
-            pnlNav.Height = btnSettings.Height;
-            pnlNav.Top = btnSettings.Top;
-            btnSettings.BackColor = Color.FromArgb(46, 51, 73);
-
-            lblInicio.Text = "Configurações";
-            PnlFormLoader.Controls.Clear();
-            frmConfig FrmDashboard_Vrb = new()
-            {
-                Dock = DockStyle.Fill,
-                TopLevel = false,
-                TopMost = true,
-                FormBorderStyle = FormBorderStyle.None
-            };
-            PnlFormLoader.Controls.Add(FrmDashboard_Vrb);
-            FrmDashboard_Vrb.Show();
-        }
-
-        private void btnDashboard_Leave(object sender, EventArgs e)
+        private void BtnDashboard_Leave(object sender, EventArgs e)
         {
             btnDashboard.BackColor = Color.FromArgb(24, 30, 54);
         }
 
-        private void btnAnalytics_Leave(object sender, EventArgs e)
+        private void BtnAnalytics_Leave(object sender, EventArgs e)
         {
             btnAnalytics.BackColor = Color.FromArgb(24, 30, 54);
         }
 
-        private void btnCalendar_Leave(object sender, EventArgs e)
+        private void BtnCalendar_Leave(object sender, EventArgs e)
         {
             btnCalendar.BackColor = Color.FromArgb(24, 30, 54);
         }
 
-        private void btnContact_Leave(object sender, EventArgs e)
+        private void BtnContact_Leave(object sender, EventArgs e)
         {
             btnContact.BackColor = Color.FromArgb(24, 30, 54);
-        }
-
-        private void btnSettings_Leave(object sender, EventArgs e)
-        {
-            btnSettings.BackColor = Color.FromArgb(24, 30, 54);
         }
         #endregion
 
@@ -270,83 +246,20 @@ namespace Unip.Tcc
             label8.Text = "Desligado";
             CronometroStop();
             DisableControls();
-            ResetDefaults();
         }
 
         private void EnableControls()
         {
-            led1.Enabled = true;
-            led2.Enabled = true;
-            led3.Enabled = true;
             groupBox1.Enabled = true;
         }
 
         private void DisableControls()
         {
-            led1.Enabled = false;
-            led2.Enabled = false;
-            led3.Enabled = false;
             groupBox1.Enabled = false;
         }
-
-        private void ResetDefaults()
-        {
-            led1.Checked = false;
-            led2.Checked = false;
-            led3.Checked = false;
-
-        }  
         #endregion
 
         #region Configurações de Funções p/ Arduino
-        private void Led1CheckboxClicked(object sender, EventArgs e)
-
-        {
-            if (isConnected)
-            {
-                if (led1.Checked)
-                {
-                    port.Write("#LED1ON\n");
-                }
-                else
-                {
-                    port.Write("#LED1OF\n");
-                }
-            }
-        }
-
-        private void Led2CheckboxClicked(object sender, EventArgs e)
-
-        {
-            if (isConnected)
-            {
-                if (led2.Checked)
-                {
-                    port.Write("#LED2ON\n");
-                }
-                else
-                {
-                    port.Write("#LED2OF\n");
-                }
-            }
-        }
-
-        private void Led3CheckboxClicked(object sender, EventArgs e)
-
-        {
-            if (isConnected)
-            {
-                if (led3.Checked)
-                {
-                    port.Write("#LED3ON\n");
-                }
-                else
-                {
-                    port.Write("#LED3OF\n");
-                }
-            }
-        }
-
         private void Garrafa200mLChecked(object sender, EventArgs e)
         {
             if (isConnected)
@@ -395,7 +308,6 @@ namespace Unip.Tcc
         private void CloseApp(object sender, EventArgs e)
         {
             DisableControls();
-            ResetDefaults();
             Application.Exit();
         }
 
