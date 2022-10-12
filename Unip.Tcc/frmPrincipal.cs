@@ -3,8 +3,6 @@ using System.IO.Ports;
 
 namespace Unip.Tcc
 {
-
-
     public partial class frmPrincipal : Form
     {
         #region Cronômetro
@@ -18,6 +16,9 @@ namespace Unip.Tcc
         string[] ports;
         SerialPort port;
         #endregion
+
+        public DialogResult action = DialogResult.None;
+        public DataValues dataValues = new();
 
         public frmPrincipal()
         {
@@ -49,7 +50,6 @@ namespace Unip.Tcc
             aTimer.Interval = 1000;
             aTimer.Enabled = true;
             #endregion
-
 
             #region Configurações Arduino
             DisableControls();
@@ -106,7 +106,7 @@ namespace Unip.Tcc
 
             lblInicio.Text = "Estatísticas";
             PnlFormLoader.Controls.Clear();
-            frmEstatisticas FrmDashboard_Vrb = new()
+            frmEstatisticas FrmDashboard_Vrb = new(this)
             {
                 Dock = DockStyle.Fill,
                 TopLevel = false,
@@ -244,6 +244,8 @@ namespace Unip.Tcc
             port.Close();
             connect.Text = "Conectar";
             label8.Text = "Desligado";
+            if(lblInicio.Text == "Estatísticas")
+                action = MessageBox.Show("Deseja limpar os dados capturados?", "Atenção!", MessageBoxButtons.YesNo);
             CronometroStop();
             DisableControls();
         }
@@ -311,11 +313,25 @@ namespace Unip.Tcc
             Application.Exit();
         }
 
-        public enum State
-        {
-            Zerado,
-            Funcionando,
-            Pausado
-        }
+        public bool ArduinoIsConnected() => isConnected;
+    }
+    
+    public enum State
+    {
+        Zerado,
+        Funcionando,
+        Pausado
+    }
+
+    public class DataValues
+    {
+        public string QntProd200 { get; set; }
+        public string QntProd300 { get; set; }
+        public string QntRej200 { get; set; }
+        public string QntRej300 { get; set; }
+        public string Energ200 { get; set; }
+        public string Energ300 { get; set; }
+        public string Litros200 { get; set; }
+        public string Litros300 { get; set; }
     }
 }
