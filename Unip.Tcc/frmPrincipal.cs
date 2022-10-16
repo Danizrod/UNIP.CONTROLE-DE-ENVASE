@@ -125,7 +125,7 @@ namespace Unip.Tcc
 
             lblInicio.Text = "Atividade";
             PnlFormLoader.Controls.Clear();
-            frmAtividade FrmDashboard_Vrb = new()
+            frmAtividade FrmDashboard_Vrb = new(this)
             {
                 Dock = DockStyle.Fill,
                 TopLevel = false,
@@ -231,7 +231,23 @@ namespace Unip.Tcc
             isConnected = true;
             string selectedPort = comboBox1.GetItemText(comboBox1.SelectedItem);
             port = new SerialPort(selectedPort, 9600, Parity.None, 8, StopBits.One);
-            port.Open();
+
+            try
+            {
+                if (port.IsOpen)
+                {
+                    port.Close();
+                }
+
+                port.Dispose();
+                port.Open();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
             connect.Text = "Desconectar";
             label8.Text = "Ligado";
             EnableControls();
@@ -259,6 +275,11 @@ namespace Unip.Tcc
         {
             groupBox1.Enabled = false;
         }
+
+        public bool ArduinoIsConnected() => isConnected;
+
+        public SerialPort GetPortArduino() => port;
+
         #endregion
 
         #region Configurações de Funções p/ Arduino
@@ -274,6 +295,8 @@ namespace Unip.Tcc
                     garrafa300mL.ForeColor = Color.White;
                     garrafa300mL.Checked = false;
                     port.Write("#GARRAFA200MLON\n");
+
+
                 }
                 else
                 {
@@ -312,8 +335,6 @@ namespace Unip.Tcc
             DisableControls();
             Application.Exit();
         }
-
-        public bool ArduinoIsConnected() => isConnected;
     }
     
     public enum State

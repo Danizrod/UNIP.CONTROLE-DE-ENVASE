@@ -195,7 +195,7 @@ void SetaVelocidadeEsteiras()
         }
         else if (commandString.indexOf("V2") != -1)
         {
-            vel2 = 60;
+            vel2 = 70;
             ComandaEsteira(2, 1);
         }
         else if (commandString.indexOf("V3") != -1)
@@ -304,18 +304,18 @@ void ComandaEsteira(int esteira, bool comando)
     }
     else
     {
-      if (comando == 1)
+        if (comando == 1)
         {
             analogWrite(velmotor, vel2);
 
-            digitalWrite(mla, LOW);
-            digitalWrite(mlb, HIGH);
+            digitalWrite(mla, HIGH);
+            digitalWrite(mlb, LOW);
         }
         else
         {
             digitalWrite(mla, LOW);
             digitalWrite(mlb, LOW);
-        } 
+        }
         
         
     }
