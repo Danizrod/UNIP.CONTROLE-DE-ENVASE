@@ -1,0 +1,32 @@
+/////////////////////////////////////////////////////////////
+//							   //
+//		      PORTAS ARDUINO			   //
+//							   //
+//							   //
+//			PORTAS PWM			   //
+//	Descrição				Portas	   //
+//							   //
+//	Bomba					12	   //
+//	AtuadorA (parada1)			11	   //
+//	AtuadorB (parada2)			10	   //
+//	AtuadorC (rejeição)			09	   //
+//	Solenóide				08	   //
+//	Esteira Envase (velocidade)		07	   //
+//	Esteira Envase (Direção 1)		06	   //
+//	Esteira Envase (Direção 2)		05	   //
+//	Esteira Valida garrafa (velocidade)	04	   //
+//	Esteira Valida garrafa (Direção 1)	03	   //
+//	Esteira Valida garrafa (Direção 2)	02	   //
+//							   //
+//			PORTAS DIGITAIS			   //
+//	Descrição				Portas	   //
+//							   //
+//	SensorA (infra validação - de baixo)	52	   //
+//	SensorB (infra validação - de cima)	50	   //
+//	SensorC (infra envase entrada)		48	   //
+//	SensorD (infra envase saida)		46	   //
+//	SensorE (capacitivo envase)		44	   //
+//	SensorF (capacitivo tanque - de baixo)	42	   //
+//	SensorG (capacitivo tanque - de cima)	40	   //
+//							   //
+/////////////////////////////////////////////////////////////
