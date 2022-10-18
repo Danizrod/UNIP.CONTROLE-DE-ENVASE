@@ -31,7 +31,7 @@ bool emEnvase = false;
 #define sensorF 42 // capacitivo
 #define sensorG 40 // capacitivo
 
-int tamanhoGarrafa = 0; // 0 é nenhuma, 1 é pequena e 2 é granded
+int tamanhoGarrafa = 0; // 0 é nenhuma, 1 é pequena e 2 é grande
 
 // Variaveis de conexão
 String inputString = "";   // string bruta passada pelo programa
@@ -385,7 +385,7 @@ void ComandaEsteira(int esteira, bool comando)
 bool getStateGarrafa()
 {
     bool state = false;
-    Serial.println(inputString.substring(13, 15));
+    
     if (inputString.substring(13, 15).equals("ON"))
     {
         state = true;
