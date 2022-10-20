@@ -1,40 +1,57 @@
-﻿using System.IO.Ports;
+﻿using System;
+using System.IO.Ports;
 using System.Runtime.InteropServices;
 
 namespace Unip.Tcc
 {
     public partial class frmAtividade : Form
     {
-        #region Timer
-        public System.Windows.Forms.Timer aTimer = new();
-        #endregion
         private readonly frmPrincipal _frmPrincipal;
-        public int esteira1 = 0;
-        public int esteira2 = 0;
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();
 
         public frmAtividade(frmPrincipal frmPrincipal)
         {
             InitializeComponent();
 
             _frmPrincipal = frmPrincipal;
-            //#region Configurações de Cronômetro
-            //aTimer.Tick += TerminalPrintData;
-            //aTimer.Interval = 1000;
-            //aTimer.Enabled = true;
-            //#endregion
 
+            velocidade1.Text = _frmPrincipal.esteira1.ToString();
+            velocidade2.Text = _frmPrincipal.esteira2.ToString();
+
+            VerificarVelocidades();
         }
 
-        private void TerminalPrintData(object sender, EventArgs e)
+        private void VerificarVelocidades()
         {
-            if (_frmPrincipal.ArduinoIsConnected())
+            if (_frmPrincipal.esteira1 == 3)
             {
-                var port = _frmPrincipal.GetPortArduino();
-                var teste = port.ReadLine();
+                increase1.Enabled = false;
+                decrease1.Enabled = true;
+            }
+            else if (_frmPrincipal.esteira1 == 0)
+            {
+                increase1.Enabled = true;
+                decrease1.Enabled = false;
+            }
+            else
+            {
+                increase1.Enabled = true;
+                decrease1.Enabled = true;
+            }
+
+            if (_frmPrincipal.esteira2 == 3)
+            {
+                increase2.Enabled = false;
+                decrease2.Enabled = true;
+            }
+            else if (_frmPrincipal.esteira2 == 0)
+            {
+                increase2.Enabled = true;
+                decrease2.Enabled = false;
+            }
+            else
+            {
+                increase2.Enabled = true;
+                decrease2.Enabled = true;
             }
         }
 
@@ -42,7 +59,7 @@ namespace Unip.Tcc
         {
             if (_frmPrincipal.ArduinoIsConnected())
             {
-                if (esteira1 == 3)
+                if (_frmPrincipal.esteira1 == 3)
                 {
                     increase1.Enabled = false;
                     decrease1.Enabled = true;
@@ -53,16 +70,17 @@ namespace Unip.Tcc
                     decrease1.Enabled = true;
                 }
 
-                if (esteira1 < 3)
+                if (_frmPrincipal.esteira1 < 3)
                 {
-                    esteira1 += 1;
+                    _frmPrincipal.esteira1 += 1;
                 }
 
                 var port = _frmPrincipal.GetPortArduino();
-                port.Write("#ESTEIRA1V" + esteira1 + "\n");
-                velocidade1.Text = esteira1.ToString();
+                var command = "#ESTEIRA1V" + _frmPrincipal.esteira1 + "\n";
+                port.Write(command);
+                velocidade1.Text = _frmPrincipal.esteira1.ToString();
 
-                if (esteira1 == 3)
+                if (_frmPrincipal.esteira1 == 3)
                 {
                     increase1.Enabled = false;
                     decrease1.Enabled = true;
@@ -75,7 +93,7 @@ namespace Unip.Tcc
             }
             else
             {
-                esteira1 = 0;
+                _frmPrincipal.esteira1 = 0;
             }
         }
 
@@ -83,7 +101,7 @@ namespace Unip.Tcc
         {
             if (_frmPrincipal.ArduinoIsConnected())
             {
-                if (esteira1 == 0)
+                if (_frmPrincipal.esteira1 == 0)
                 {
                     decrease1.Enabled = false;
                     increase1.Enabled = true;
@@ -94,17 +112,18 @@ namespace Unip.Tcc
                     increase1.Enabled = true;
                 }
 
-                if (esteira1 > 0)
+                if (_frmPrincipal.esteira1 > 0)
                 {
-                    esteira1 -= 1;
+                    _frmPrincipal.esteira1 -= 1;
                 }
 
 
                 var port = _frmPrincipal.GetPortArduino();
-                port.Write("#ESTEIRA1V" + esteira1 + "\n");
-                velocidade1.Text = esteira1.ToString();
+                var command = "#ESTEIRA1V" + _frmPrincipal.esteira1 + "\n";
+                port.Write(command);
+                velocidade1.Text = _frmPrincipal.esteira1.ToString();
 
-                if (esteira1 == 0)
+                if (_frmPrincipal.esteira1 == 0)
                 {
                     decrease1.Enabled = false;
                     increase1.Enabled = true;
@@ -117,7 +136,7 @@ namespace Unip.Tcc
             }
             else
             {
-                esteira1 = 0;
+                _frmPrincipal.esteira1 = 0;
             }
         }
 
@@ -125,7 +144,7 @@ namespace Unip.Tcc
         {
             if (_frmPrincipal.ArduinoIsConnected())
             {
-                if (esteira2 == 3)
+                if (_frmPrincipal.esteira2 == 3)
                 {
                     increase2.Enabled = false;
                     decrease2.Enabled = true;
@@ -136,16 +155,17 @@ namespace Unip.Tcc
                     decrease2.Enabled = true;
                 }
 
-                if (esteira2 < 3)
+                if (_frmPrincipal.esteira2 < 3)
                 {
-                    esteira2 += 1;
+                    _frmPrincipal.esteira2 += 1;
                 }
 
                 var port = _frmPrincipal.GetPortArduino();
-                port.Write("#ESTEIRA2V" + esteira2 + "\n");
-                velocidade2.Text = esteira2.ToString();
+                var command = "#ESTEIRA2V" + _frmPrincipal.esteira2 + "\n";
+                port.Write(command);
+                velocidade2.Text = _frmPrincipal.esteira2.ToString();
 
-                if (esteira2 == 3)
+                if (_frmPrincipal.esteira2 == 3)
                 {
                     increase2.Enabled = false;
                     decrease2.Enabled = true;
@@ -158,7 +178,7 @@ namespace Unip.Tcc
             }
             else
             {
-                esteira2 = 0;
+                _frmPrincipal.esteira2 = 0;
             }
         }
 
@@ -166,7 +186,7 @@ namespace Unip.Tcc
         {
             if (_frmPrincipal.ArduinoIsConnected())
             {
-                if (esteira2 == 0)
+                if (_frmPrincipal.esteira2 == 0)
                 {
                     decrease2.Enabled = false;
                     increase2.Enabled = true;
@@ -177,16 +197,17 @@ namespace Unip.Tcc
                     increase2.Enabled = true;
                 }
 
-                if (esteira2 > 0)
+                if (_frmPrincipal.esteira2 > 0)
                 {
-                    esteira2 -= 1;
+                    _frmPrincipal.esteira2 -= 1;
                 }
 
                 var port = _frmPrincipal.GetPortArduino();
-                port.Write("#ESTEIRA2V" + esteira2 + "\n");
-                velocidade2.Text = esteira2.ToString();
+                var command = "#ESTEIRA2V" + _frmPrincipal.esteira2 + "\n";
+                port.Write(command);
+                velocidade2.Text = _frmPrincipal.esteira2.ToString();
 
-                if (esteira2 == 0)
+                if (_frmPrincipal.esteira2 == 0)
                 {
                     decrease2.Enabled = false;
                     increase2.Enabled = true;
@@ -199,7 +220,31 @@ namespace Unip.Tcc
             }
             else
             {
-                esteira2 = 0;
+                _frmPrincipal.esteira2 = 0;
+            }
+        }
+
+        private void PararEnvase(object sender, EventArgs e)
+        {
+            if (_frmPrincipal.ArduinoIsConnected())
+            {
+                var port = _frmPrincipal.GetPortArduino();
+                var command = "#PARARENVASE\n";
+                port.Write(command);
+            }
+        }
+
+        private void PararEsteiras(object sender, EventArgs e)
+        {
+            if (_frmPrincipal.ArduinoIsConnected())
+            {
+                _frmPrincipal.esteira1 = 0;
+                _frmPrincipal.esteira2 = 0;
+
+                velocidade1.Text = _frmPrincipal.esteira1.ToString();
+                velocidade2.Text = _frmPrincipal.esteira2.ToString();
+
+                _frmPrincipal.DisconnectFromArduino(true);
             }
         }
     }

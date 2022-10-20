@@ -43,16 +43,21 @@
             this.qntRej300 = new System.Windows.Forms.Label();
             this.energ300 = new System.Windows.Forms.Label();
             this.litros300 = new System.Windows.Forms.Label();
+            this.update = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
             // 
+            this.button1.BackColor = System.Drawing.Color.PaleGreen;
+            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.button1.FlatAppearance.BorderSize = 3;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Location = new System.Drawing.Point(606, 207);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(120, 42);
             this.button1.TabIndex = 5;
             this.button1.Text = "Exportar Relatório";
-            this.button1.UseVisualStyleBackColor = true;
+            this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.GenerateExcel);
             // 
             // label5
@@ -209,12 +214,26 @@
             this.litros300.TabIndex = 15;
             this.litros300.Text = "0";
             // 
+            // update
+            // 
+            this.update.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.update.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.update.ForeColor = System.Drawing.Color.Black;
+            this.update.Location = new System.Drawing.Point(651, 22);
+            this.update.Name = "update";
+            this.update.Size = new System.Drawing.Size(75, 23);
+            this.update.TabIndex = 16;
+            this.update.Text = "Atualizar";
+            this.update.UseVisualStyleBackColor = false;
+            this.update.Click += new System.EventHandler(this.UpdateValues);
+            // 
             // frmEstatisticas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(51)))), ((int)(((byte)(73)))));
             this.ClientSize = new System.Drawing.Size(765, 291);
+            this.Controls.Add(this.update);
             this.Controls.Add(this.litros300);
             this.Controls.Add(this.energ300);
             this.Controls.Add(this.qntRej300);
@@ -254,5 +273,6 @@
         private Label qntRej300;
         private Label energ300;
         private Label litros300;
+        private Button update;
     }
 }

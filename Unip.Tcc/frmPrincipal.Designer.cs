@@ -247,9 +247,9 @@
             this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(151)))), ((int)(((byte)(176)))));
             this.label9.Location = new System.Drawing.Point(39, 93);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(198, 17);
+            this.label9.Size = new System.Drawing.Size(214, 17);
             this.label9.TabIndex = 2;
-            this.label9.Text = "Em execução por        segundos";
+            this.label9.Text = "Em execução por            segundos";
             // 
             // label8
             // 

@@ -31,12 +31,15 @@ bool emEnvase = false;
 #define sensorF 42 // capacitivo
 #define sensorG 40 // capacitivo
 
-int tamanhoGarrafa = 0; // 0 é nenhuma, 1 é pequena e 2 é grande
-
-// Variaveis de conexão
+// Variaveis
+int tamanhoGarrafa = 0;    // 0 é nenhuma, 1 é pequena e 2 é grande
 String inputString = "";   // string bruta passada pelo programa
 String commandString = ""; // string refinada p/ comando
 boolean stringComplete = false;
+int garrafasEnvasadas200 = 0;
+int garrafasEnvasadas300 = 0;
+int garrafasDescartadas200 = 0;
+int garrafasDescartadas300 = 0;
 
 void setup()
 {
@@ -67,9 +70,6 @@ void setup()
 
 void loop()
 {
-    // EMERGENCIA PRA NAO MOLHAR A CASA DO NETAO
-    // digitalWrite(solenoide, LOW);
-
     if (ChecagemTanque())
     {
         ComandaBomba();
@@ -113,7 +113,14 @@ void loop()
 
             if (digitalRead(sensorD) != 0)
             {
-                Serial.println("Garrafa envasada!");
+                if (tamanhoGarrafa == 1)
+                {
+                    garrafasEnvasadas200 += 1;
+                }
+                else
+                {
+                    garrafasEnvasadas300 += 1;
+                }
             }
         }
     }
@@ -148,7 +155,14 @@ void ValidacaoDescarte()
         digitalWrite(atuadorC, HIGH);
         if (digitalRead(sensorA) == 0)
         {
-            Serial.println("Garrafa descartada!");
+            if (tamanhoGarrafa == 1)
+            {
+                garrafasDescartadas200 += 1;
+            }
+            else
+            {
+                garrafasDescartadas300 += 1;
+            }
         }
     }
 }
@@ -186,8 +200,40 @@ void RecebeComandos()
     {
         SetaVelocidadeEsteiras();
     }
+    else if (commandString.indexOf("PARARENVASE") != -1)
+    {
+        digitalWrite(solenoide, LOW);
+    }
+    else if (commandString.indexOf("PARARPROCESSO") != -1)
+    {
+        ParaProcesso();
+    }
+    else if (commandString.indexOf("CHECARDADOS") != -1)
+    {
+        String str = "GE2:" + String(garrafasEnvasadas200) + ".GE3:" + String(garrafasEnvasadas300) + ".GD2:" + String(garrafasDescartadas200) + ".GD3:" + String(garrafasDescartadas300);
+        
+        //NÃO REMOVER ESTE PRINT EM HIPÓTESE ALGUMA
+        Serial.println(str);
+    }
 
     inputString = "";
+}
+
+void ParaProcesso()
+{
+    ComandaEsteira(1, 0);
+    ComandaEsteira(2, 0);
+
+    tamanhoGarrafa = 0;
+    garrafasEnvasadas200 = 0;
+    garrafasEnvasadas300 = 0;
+    garrafasDescartadas200 = 0;
+    garrafasDescartadas300 = 0;
+
+    digitalWrite(atuadorA, LOW);
+    digitalWrite(atuadorB, LOW);
+    digitalWrite(atuadorC, LOW);
+    digitalWrite(solenoide, LOW);
 }
 
 bool ValidaGarrafa()
@@ -341,6 +387,18 @@ void getCommand()
         {
             commandString = inputString.substring(1, 11);
         }
+        else if (inputString.indexOf("PARARENVASE") != -1)
+        {
+            commandString = inputString.substring(1, 12);
+        }
+        else if (inputString.indexOf("PARARPROCESSO") != -1)
+        {
+            commandString = inputString.substring(1, 14);
+        }
+        else if (inputString.indexOf("CHECARDADOS") != -1)
+        {
+            commandString = inputString.substring(1, 12);
+        }
     }
 }
 
@@ -385,7 +443,7 @@ void ComandaEsteira(int esteira, bool comando)
 bool getStateGarrafa()
 {
     bool state = false;
-    
+
     if (inputString.substring(13, 15).equals("ON"))
     {
         state = true;

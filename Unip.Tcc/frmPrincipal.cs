@@ -20,6 +20,9 @@ namespace Unip.Tcc
         public DialogResult action = DialogResult.None;
         public DataValues dataValues = new();
 
+        public int esteira1 = 0;
+        public int esteira2 = 0;
+
         public frmPrincipal()
         {
             InitializeComponent();
@@ -182,7 +185,7 @@ namespace Unip.Tcc
             _state = State.Funcionando;
         }
 
-        private void CronometroStop()
+        public void CronometroStop()
         {
             _state = State.Zerado;
         }
@@ -217,7 +220,7 @@ namespace Unip.Tcc
             }
             else
             {
-                DisconnectFromArduino();
+                DisconnectFromArduino(false);
             }
         }
 
@@ -253,17 +256,24 @@ namespace Unip.Tcc
             EnableControls();
         }
 
-        private void DisconnectFromArduino()
+        public void DisconnectFromArduino(bool forcado)
         {
-            isConnected = false;
-            port.Write("#STOP\n");
-            port.Close();
-            connect.Text = "Conectar";
-            label8.Text = "Desligado";
-            if(lblInicio.Text == "Estatísticas")
-                action = MessageBox.Show("Deseja limpar os dados capturados?", "Atenção!", MessageBoxButtons.YesNo);
-            CronometroStop();
-            DisableControls();
+            if (!forcado)
+                action = MessageBox.Show("Deseja mesmo desconectar? Desconectar-se causará a perda dos dados coletados no processo!", "Atenção!", MessageBoxButtons.YesNo);
+            else
+                action = DialogResult.Yes;
+
+            if (action == DialogResult.Yes)
+            {
+                isConnected = false;
+                connect.Text = "Conectar";
+                label8.Text = "Desligado";
+                port.Write("#PARARPROCESSO\n");
+                port.Close();
+
+                CronometroStop();
+                DisableControls();
+            }
         }
 
         private void EnableControls()
@@ -271,13 +281,18 @@ namespace Unip.Tcc
             groupBox1.Enabled = true;
         }
 
-        private void DisableControls()
+        public void DisableControls()
         {
             groupBox1.Enabled = false;
+            garrafa200mL.Checked = false;
+            garrafa200mL.ForeColor = Color.White;
+            garrafa300mL.Checked = false;
+            garrafa300mL.ForeColor = Color.White;
         }
 
         public bool ArduinoIsConnected() => isConnected;
 
+        public bool GarrafaSetada() => garrafa200mL.Checked || garrafa300mL.Checked;
         public SerialPort GetPortArduino() => port;
 
         #endregion
@@ -321,8 +336,8 @@ namespace Unip.Tcc
                     port.Write("#GARRAFA300MLON\n");
                 }
                 else
-                { 
-                    if(!garrafa200mL.Checked) CronometroStop();
+                {
+                    if (!garrafa200mL.Checked) CronometroStop();
                     garrafa300mL.ForeColor = Color.White;
                     port.Write("#GARRAFA300MLOFF\n");
                 }
@@ -332,11 +347,19 @@ namespace Unip.Tcc
 
         private void CloseApp(object sender, EventArgs e)
         {
-            DisableControls();
-            Application.Exit();
+            var finalizar = MessageBox.Show("Deseja finalizar o programa? O processo será finalizado!", "Atenção!", MessageBoxButtons.YesNo);
+            if (finalizar == DialogResult.Yes)
+            {
+                if (ArduinoIsConnected())
+                {
+                    port.Write("#PARARPROCESSO\n");
+                    DisableControls();
+                }
+                Application.Exit();
+            }
         }
     }
-    
+
     public enum State
     {
         Zerado,
@@ -346,13 +369,13 @@ namespace Unip.Tcc
 
     public class DataValues
     {
-        public string QntProd200 { get; set; }
-        public string QntProd300 { get; set; }
-        public string QntRej200 { get; set; }
-        public string QntRej300 { get; set; }
-        public string Energ200 { get; set; }
-        public string Energ300 { get; set; }
-        public string Litros200 { get; set; }
-        public string Litros300 { get; set; }
+        public string QntProd200 { get; set; } = "0";
+        public string QntProd300 { get; set; } = "0";
+        public string QntRej200 { get; set; } = "0";
+        public string QntRej300 { get; set; } = "0";
+        public string Energ200 { get; set; } = "0";
+        public string Energ300 { get; set; } = "0";
+        public string Litros200 { get; set; } = "0";
+        public string Litros300 { get; set; } = "0";
     }
 }
