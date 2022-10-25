@@ -1,8 +1,6 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Office2016.Excel;
-using OfficeOpenXml;
-using System.IO.Packaging;
-
+﻿using OfficeOpenXml;
+using OfficeOpenXml.Drawing.Chart;
+using Color = System.Drawing.Color;
 
 namespace Unip.Tcc
 {
@@ -11,6 +9,7 @@ namespace Unip.Tcc
         #region Timer
         public System.Windows.Forms.Timer aTimer = new();
         #endregion
+
         private readonly frmPrincipal _frmPrincipal;
 
         public frmEstatisticas(frmPrincipal frmPrincipal)
@@ -144,20 +143,34 @@ namespace Unip.Tcc
                 }
                 catch (Exception ex)
                 {
-
                     MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
-        private static void CriaPastaDeTrabalho(ExcelPackage package)
+        private void CriaPastaDeTrabalho(ExcelPackage package)
         {
             var sheet = package.Workbook.Worksheets.Add("Dados Coletados");
             CriaCabecalhos(sheet);
 
+            sheet.Cells["B4"].Value = _frmPrincipal.dataValues.QntProd200;
+            sheet.Cells["B5"].Value = _frmPrincipal.dataValues.QntRej200;
+            sheet.Cells["B6"].Value = _frmPrincipal.dataValues.Energ200;
+            sheet.Cells["B7"].Value = _frmPrincipal.dataValues.Litros200;
 
+            sheet.Cells["C4"].Value = _frmPrincipal.dataValues.QntProd300;
+            sheet.Cells["C5"].Value = _frmPrincipal.dataValues.QntRej300;
+            sheet.Cells["C6"].Value = _frmPrincipal.dataValues.Energ300;
+            sheet.Cells["C7"].Value = _frmPrincipal.dataValues.Litros300;
 
-            var row = 4;
+            var columnChart = sheet.Drawings.AddBarChart("crtExtensionsSize", eBarChartType.ColumnClustered3D);
+            columnChart.SetSize(520, 310);
+            columnChart.SetPosition(45, 255);
+            columnChart.Title.Text = "";
+            columnChart.Series.Add(ExcelCellBase.GetAddress(4, 2, 7, 2), ExcelCellBase.GetAddress(4, 1, 7, 1));
+            columnChart.Series[0].Header = "Garrafa 200mL";
+            columnChart.Series.Add(ExcelCellBase.GetAddress(4, 3, 7, 3), ExcelCellBase.GetAddress(4, 1, 7, 1));
+            columnChart.Series[1].Header = "Garrafa 300mL";
 
             sheet.Cells[1, 1, 7, 7].AutoFitColumns();
         }
