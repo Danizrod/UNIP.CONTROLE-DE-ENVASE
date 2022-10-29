@@ -44,6 +44,7 @@
             this.energ300 = new System.Windows.Forms.Label();
             this.litros300 = new System.Windows.Forms.Label();
             this.update = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -227,12 +228,23 @@
             this.update.UseVisualStyleBackColor = false;
             this.update.Click += new System.EventHandler(this.UpdateValues);
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(651, 69);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 17;
+            this.button2.Text = "Reset";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // frmEstatisticas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(51)))), ((int)(((byte)(73)))));
             this.ClientSize = new System.Drawing.Size(765, 291);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.update);
             this.Controls.Add(this.litros300);
             this.Controls.Add(this.energ300);
@@ -274,5 +286,6 @@
         private Label energ300;
         private Label litros300;
         private Button update;
+        private Button button2;
     }
 }

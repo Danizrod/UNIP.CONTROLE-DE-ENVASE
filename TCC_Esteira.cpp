@@ -1,25 +1,19 @@
 // leituras digitais
-#define atuadorA 11 // parada1
-#define atuadorB 10 // parada2
-#define atuadorC 9  // rejeição
-#define solenoide 8
+#define bomba 22
+#define atuadorA 25 // parada1
+#define atuadorB 24 // parada2
+#define atuadorC 23 // rejeição
+#define solenoide 26
 
-// esteira1
-#define velmotor1 4
-#define mla1 3
-#define mlb1 2
-int vel1 = 0;
-bool esteira1Ligada = false;
+// esteira1 validação
+#define velmotor1 7
+#define mla1 6
+#define mlb1 5
 
-// esteira2
-#define velmotor2 7
-#define mla2 6
-#define mlb2 5
-int vel2 = 0;
-bool esteira2Ligada = false;
-
-#define bomba 12
-bool emEnvase = false;
+// esteira2 envase
+#define velmotor2 4
+#define mla2 2
+#define mlb2 3
 
 // sensores
 #define sensorA 52 // infra-vermelho
@@ -32,30 +26,46 @@ bool emEnvase = false;
 #define sensorG 40 // capacitivo
 
 // Variaveis
-int tamanhoGarrafa = 0;    // 0 é nenhuma, 1 é pequena e 2 é grande
+int vel1 = 0;
+bool esteira1Ligada = false;
+int vel2 = 0;
+bool esteira2Ligada = false;
+bool emEnvase = false;
+int tamanhoGarrafa = 0;    // 0 é nenhuma, 1 é 200mL e 2 é 300mL
 String inputString = "";   // string bruta passada pelo programa
 String commandString = ""; // string refinada p/ comando
 boolean stringComplete = false;
+boolean emVerificacao = false;
 int garrafasEnvasadas200 = 0;
 int garrafasEnvasadas300 = 0;
 int garrafasDescartadas200 = 0;
 int garrafasDescartadas300 = 0;
+int tempo = 0;
 
 void setup()
 {
     Serial.begin(9600);
 
-    digitalWrite(atuadorA, LOW);
-    digitalWrite(atuadorB, HIGH);
+    pinMode(atuadorA, OUTPUT);
+    pinMode(atuadorB, OUTPUT);
+    pinMode(atuadorC, OUTPUT);
+    pinMode(bomba, OUTPUT);
+    pinMode(solenoide, OUTPUT);
 
-    pinMode(sensorA, INPUT);
-    pinMode(sensorB, INPUT);
-    pinMode(sensorC, INPUT);
-    pinMode(sensorD, INPUT);
+    digitalWrite(atuadorA, HIGH);
+    digitalWrite(atuadorB, LOW);
+    digitalWrite(atuadorC, HIGH);
+    digitalWrite(solenoide, HIGH);
+    digitalWrite(bomba, HIGH);
 
-    pinMode(sensorE, OUTPUT);
-    pinMode(sensorF, OUTPUT);
-    pinMode(sensorG, OUTPUT);
+    pinMode(sensorA, INPUT); // infra-vermelho
+    pinMode(sensorB, INPUT); // infra-vermelho
+    pinMode(sensorC, INPUT); // infra-vermelho
+    pinMode(sensorD, INPUT); // infra-vermelho
+
+    pinMode(sensorE, OUTPUT); // capacitivo
+    pinMode(sensorF, OUTPUT); // capacitivo
+    pinMode(sensorG, OUTPUT); // capacitivo
 
     pinMode(velmotor1, OUTPUT);
     pinMode(mla1, OUTPUT);
@@ -83,44 +93,36 @@ void loop()
     // Processo
     if (tamanhoGarrafa != 0)
     {
-        // liga esteira
-        if (!esteira1Ligada)
-        {
-            ComandaEsteira(1, 1);
-        }
-
         // identifica garrafa na estação de validação
-        if (digitalRead(sensorA) != 0)
+        if (digitalRead(sensorA) != 1)
         {
-
             if (esteira1Ligada)
             {
                 ComandaEsteira(1, 0);
             }
 
-            ValidacaoDescarte();
+            delay(2000);
+
+            if (!emVerificacao)
+            {
+                ValidacaoDescarte();
+            }
+
+            delay(500);
         }
 
         // identifica chegada da garrafa na estação de envase
-        if (digitalRead(sensorC) != 0)
+        if (digitalRead(sensorC) != 1)
         {
+            delay(100);
             if (esteira2Ligada)
             {
                 ComandaEsteira(2, 0);
             }
 
-            ExecutaEnvase();
-
-            if (digitalRead(sensorD) != 0)
+            if (!emEnvase)
             {
-                if (tamanhoGarrafa == 1)
-                {
-                    garrafasEnvasadas200 += 1;
-                }
-                else
-                {
-                    garrafasEnvasadas300 += 1;
-                }
+                ExecutaEnvase();
             }
         }
     }
@@ -128,6 +130,7 @@ void loop()
 
 void ValidacaoDescarte()
 {
+    emVerificacao = true;
     // identifica tamanho da garrafa
     if (ValidaGarrafa())
     {
@@ -152,19 +155,26 @@ void ValidacaoDescarte()
     else
     {
         // descarte da garrafa
-        digitalWrite(atuadorC, HIGH);
-        if (digitalRead(sensorA) == 0)
+        digitalWrite(atuadorC, LOW);
+        if (tamanhoGarrafa == 1)
         {
-            if (tamanhoGarrafa == 1)
-            {
-                garrafasDescartadas200 += 1;
-            }
-            else
-            {
-                garrafasDescartadas300 += 1;
-            }
+            garrafasDescartadas200 += 1;
+        }
+        else
+        {
+            garrafasDescartadas300 += 1;
+        }
+
+        delay(500);
+        digitalWrite(atuadorC, HIGH);
+        delay(500);
+
+        if (!esteira1Ligada)
+        {
+            ComandaEsteira(1, 1);
         }
     }
+    emVerificacao = false;
 }
 
 void RecebeComandos()
@@ -178,10 +188,24 @@ void RecebeComandos()
         if (stateGarrafa == true)
         {
             tamanhoGarrafa = 1;
+
+            if (!esteira1Ligada)
+            {
+                ComandaEsteira(1, 1);
+            }
         }
         else
         {
             tamanhoGarrafa = 0;
+            if (esteira1Ligada)
+            {
+                ComandaEsteira(1, 0);
+            }
+
+            if (esteira2Ligada)
+            {
+                ComandaEsteira(2, 0);
+            }
         }
     }
     else if (commandString.equals("GARRAFA300ML"))
@@ -190,10 +214,24 @@ void RecebeComandos()
         if (stateGarrafa == true)
         {
             tamanhoGarrafa = 2;
+
+            if (!esteira1Ligada)
+            {
+                ComandaEsteira(1, 1);
+            }
         }
         else
         {
             tamanhoGarrafa = 0;
+            if (esteira1Ligada)
+            {
+                ComandaEsteira(1, 0);
+            }
+
+            if (esteira2Ligada)
+            {
+                ComandaEsteira(2, 0);
+            }
         }
     }
     else if (commandString.indexOf("ESTEIRA") != -1)
@@ -211,9 +249,16 @@ void RecebeComandos()
     else if (commandString.indexOf("CHECARDADOS") != -1)
     {
         String str = "GE2:" + String(garrafasEnvasadas200) + ".GE3:" + String(garrafasEnvasadas300) + ".GD2:" + String(garrafasDescartadas200) + ".GD3:" + String(garrafasDescartadas300);
-        
-        //NÃO REMOVER ESTE PRINT EM HIPÓTESE ALGUMA
+
+        // NÃO REMOVER ESTE PRINT EM HIPÓTESE ALGUMA
         Serial.println(str);
+    }
+    else if (commandString.indexOf("RESETA") != -1)
+    {
+        garrafasEnvasadas200 = 0;
+        garrafasEnvasadas300 = 0;
+        garrafasDescartadas200 = 0;
+        garrafasDescartadas300 = 0;
     }
 
     inputString = "";
@@ -230,26 +275,41 @@ void ParaProcesso()
     garrafasDescartadas200 = 0;
     garrafasDescartadas300 = 0;
 
-    digitalWrite(atuadorA, LOW);
+    digitalWrite(atuadorA, HIGH);
     digitalWrite(atuadorB, LOW);
-    digitalWrite(atuadorC, LOW);
-    digitalWrite(solenoide, LOW);
+    digitalWrite(atuadorC, HIGH);
+    digitalWrite(solenoide, HIGH);
+
+    vel1 = 0;
+    esteira1Ligada = false;
+    vel2 = 0;
+    esteira2Ligada = false;
+    emEnvase = false;
+    emVerificacao = false;
 }
 
 bool ValidaGarrafa()
 {
     if (tamanhoGarrafa == 1)
     {
-        if (digitalRead(sensorB) == 0)
+        if (digitalRead(sensorB) == 1)
         {
             return true;
+        }
+        else
+        {
+            return false;
         }
     }
     else
     {
-        if (digitalRead(sensorB) != 0)
+        if (digitalRead(sensorB) != 1)
         {
             return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
@@ -260,7 +320,7 @@ void SetaVelocidadeEsteiras()
     {
         if (commandString.indexOf("V1") >= 0)
         {
-            vel1 = 50;
+            vel1 = 55;
             ComandaEsteira(1, 1);
         }
         else if (commandString.indexOf("V2") >= 0)
@@ -283,12 +343,12 @@ void SetaVelocidadeEsteiras()
     {
         if (commandString.indexOf("V1") != -1)
         {
-            vel2 = 70;
+            vel2 = 190;
             ComandaEsteira(2, 1);
         }
         else if (commandString.indexOf("V2") != -1)
         {
-            vel2 = 150;
+            vel2 = 220;
             ComandaEsteira(2, 1);
         }
         else if (commandString.indexOf("V3") != -1)
@@ -306,72 +366,67 @@ void SetaVelocidadeEsteiras()
 
 void ExecutaEnvase()
 {
-    emEnvase = true;
-    // garrafa 200mL
+    emEnvase = 1;
+    digitalWrite(atuadorA, LOW);
+    delay(1000);
+    digitalWrite(solenoide, LOW);
+    long int t1 = millis();
     if (tamanhoGarrafa == 1)
     {
-        digitalWrite(solenoide, HIGH);
-        long int t1 = millis();
-        delay(3000); // ajustar tempo do delay aqui
-        long int t2 = millis();
-
-        if (digitalRead(sensorE) != 0 || t2 - t1 > 3000) // e aqui
-        {
-            // Tem o tamanho pequeno e chegou ao fim do envase
-            digitalWrite(solenoide, LOW);
-            delay(1000);
-
-            digitalWrite(atuadorB, LOW);
-            delay(1000);
-            digitalWrite(atuadorA, LOW);
-
-            if (!esteira2Ligada)
-            {
-                ComandaEsteira(2, 1);
-            }
-        }
+        tempo = 4002;
     }
     else
     {
+        tempo = 6202;
+    }
+    delay(tempo); // ajustar tempo do delay aqui
+    long int t2 = millis();
+    if (t2 - t1 > (tempo - 2) || digitalRead(sensorE) != 0) // e aqui
+    {
+        // Tem o tamanho pequeno e chegou ao fim do envase
         digitalWrite(solenoide, HIGH);
-        long int t1 = millis();
-        delay(3000);
-        long int t2 = millis();
-
-        if (digitalRead(sensorE) != 0 || t2 - t1 > 3000)
+        delay(1000);
+        digitalWrite(atuadorB, HIGH);
+        delay(1000);
+        emEnvase = 0;
+        if (!esteira2Ligada)
         {
-            // Tem o tamanho grande e chegou ao fim do envase
-            digitalWrite(solenoide, LOW);
-            delay(1000);
+            ComandaEsteira(2, 1);
+        }
+        digitalWrite(atuadorA, HIGH);
+        delay(2000);
+        digitalWrite(atuadorB, LOW);
 
-            digitalWrite(atuadorB, LOW);
-            delay(1000);
-            digitalWrite(atuadorA, LOW);
-
-            if (!esteira2Ligada)
-            {
-                ComandaEsteira(2, 1);
-            }
+        if (tamanhoGarrafa == 1)
+        {
+            garrafasEnvasadas200 += 1;
+        }
+        else
+        {
+            garrafasEnvasadas300 += 1;
         }
     }
-    emEnvase = false;
 }
 
 bool ChecagemTanque()
 {
-    if (digitalRead(sensorF) == 0)
+    if (digitalRead(sensorG) == 0)
     {
         return true;
+    }
+    else
+    {
+        return false;
     }
 }
 
 void ComandaBomba()
 {
-    digitalWrite(bomba, HIGH);
+    // digitalWrite(bomba, LOW);
 
-    if (digitalRead(sensorG) != 0)
+    if (digitalRead(sensorF) != 0)
     {
-        digitalWrite(bomba, LOW);
+        digitalWrite(bomba, HIGH);
     }
 }
 
@@ -399,6 +454,10 @@ void getCommand()
         {
             commandString = inputString.substring(1, 12);
         }
+        else if (inputString.indexOf("RESETAR") != -1)
+        {
+            commandString = inputString.substring(1, 7);
+        }
     }
 }
 
@@ -408,6 +467,10 @@ void ComandaEsteira(int esteira, bool comando)
     {
         if (comando == 1)
         {
+            if(vel1 == 0) 
+            {
+                vel1 = 55;
+            }
             analogWrite(velmotor1, vel1);
 
             digitalWrite(mla1, LOW);
@@ -416,6 +479,9 @@ void ComandaEsteira(int esteira, bool comando)
         }
         else
         {
+            vel1 = 0;
+            analogWrite(velmotor1, vel1);
+
             digitalWrite(mla1, LOW);
             digitalWrite(mlb1, LOW);
             esteira1Ligada = false;
@@ -425,6 +491,10 @@ void ComandaEsteira(int esteira, bool comando)
     {
         if (comando == 1)
         {
+            if(vel2 == 0) 
+            {
+                vel2 = 220;
+            }
             analogWrite(velmotor2, vel2);
 
             digitalWrite(mla2, HIGH);
@@ -433,6 +503,9 @@ void ComandaEsteira(int esteira, bool comando)
         }
         else
         {
+            vel2 = 0;
+            analogWrite(velmotor2, vel2);
+
             digitalWrite(mla2, LOW);
             digitalWrite(mlb2, LOW);
             esteira2Ligada = false;

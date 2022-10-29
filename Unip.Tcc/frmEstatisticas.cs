@@ -92,8 +92,8 @@ namespace Unip.Tcc
 
                 _frmPrincipal.dataValues.Energ200 = energ200.Text;
                 _frmPrincipal.dataValues.Energ300 = energ300.Text;
-                _frmPrincipal.dataValues.Litros200 = litros200.Text;
-                _frmPrincipal.dataValues.Litros300 = litros300.Text;
+                _frmPrincipal.dataValues.Litros200 = Convert.ToString(Convert.ToDecimal(qP2) * 0.2M);
+                _frmPrincipal.dataValues.Litros300 = Convert.ToString(Convert.ToDecimal(qP3) * 0.3M);
             }
             else
             {
@@ -153,15 +153,15 @@ namespace Unip.Tcc
             var sheet = package.Workbook.Worksheets.Add("Dados Coletados");
             CriaCabecalhos(sheet);
 
-            sheet.Cells["B4"].Value = _frmPrincipal.dataValues.QntProd200;
-            sheet.Cells["B5"].Value = _frmPrincipal.dataValues.QntRej200;
-            sheet.Cells["B6"].Value = _frmPrincipal.dataValues.Energ200;
-            sheet.Cells["B7"].Value = _frmPrincipal.dataValues.Litros200;
+            sheet.Cells["B4"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.QntProd200);
+            sheet.Cells["B5"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.QntRej200);
+            sheet.Cells["B6"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.Energ200);
+            sheet.Cells["B7"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.Litros200);
 
-            sheet.Cells["C4"].Value = _frmPrincipal.dataValues.QntProd300;
-            sheet.Cells["C5"].Value = _frmPrincipal.dataValues.QntRej300;
-            sheet.Cells["C6"].Value = _frmPrincipal.dataValues.Energ300;
-            sheet.Cells["C7"].Value = _frmPrincipal.dataValues.Litros300;
+            sheet.Cells["C4"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.QntProd300);
+            sheet.Cells["C5"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.QntRej300);
+            sheet.Cells["C6"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.Energ300);
+            sheet.Cells["C7"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.Litros300);
 
             var columnChart = sheet.Drawings.AddBarChart("crtExtensionsSize", eBarChartType.ColumnClustered3D);
             columnChart.SetSize(520, 310);
@@ -201,6 +201,15 @@ namespace Unip.Tcc
 
             XLSHelper.SetRangeAsHeader(sheet.Cells[3, 1, 7, 1]);
             XLSHelper.FillBorders(sheet.Cells[3, 1, 7, 1]);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            var port = _frmPrincipal.GetPortArduino();
+            var command = "#RESETAR\n";
+            port.Write(command);
+
+            ResetValues();
         }
     }
 }
