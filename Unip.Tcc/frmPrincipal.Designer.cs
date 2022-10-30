@@ -415,8 +415,8 @@
         private ComboBox comboBox1;
         private Button connect;
         private GroupBox groupBox1;
-        private CheckBox garrafa300mL;
-        private CheckBox garrafa200mL;
+        public CheckBox garrafa300mL;
+        public CheckBox garrafa200mL;
         private GroupBox groupBox3;
     }
 }

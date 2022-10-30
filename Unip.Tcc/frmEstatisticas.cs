@@ -69,9 +69,9 @@ namespace Unip.Tcc
         {
             var port = _frmPrincipal.GetPortArduino();
             var command = "#CHECARDADOS\n";
-            port.Write(command);
+            //port.Write(command);
 
-            var resp = port.ReadLine();
+            var resp = "GE2:0.GE3:0.GD2:0.GD3:0\r";//port.ReadLine();
 
             SaveData(resp);
         }
@@ -90,8 +90,10 @@ namespace Unip.Tcc
                 var qR3 = valores.Substring(valores.LastIndexOf(".GD3:") + 5, valores.IndexOf("\r") - (valores.LastIndexOf(".GD3:") + 5));
                 _frmPrincipal.dataValues.QntRej300 = qR3;
 
-                _frmPrincipal.dataValues.Energ200 = energ200.Text;
-                _frmPrincipal.dataValues.Energ300 = energ300.Text;
+                _frmPrincipal.dataValues.Energ200 = _frmPrincipal.garrafa200mL.Checked ? Convert.ToString(CalculoEnergia("energia")) : energ200.Text;
+                _frmPrincipal.dataValues.Energ300 = _frmPrincipal.garrafa300mL.Checked ? Convert.ToString(CalculoEnergia("energia")) : energ300.Text;
+                _frmPrincipal.dataValues.Energ200Monetario = _frmPrincipal.garrafa200mL.Checked ? Convert.ToString(CalculoEnergia("financeiro")) : _frmPrincipal.dataValues.Energ200Monetario;
+                _frmPrincipal.dataValues.Energ300Monetario = _frmPrincipal.garrafa300mL.Checked ? Convert.ToString(CalculoEnergia("financeiro")) : _frmPrincipal.dataValues.Energ300Monetario;
                 _frmPrincipal.dataValues.Litros200 = Convert.ToString(Convert.ToDecimal(qP2) * 0.2M);
                 _frmPrincipal.dataValues.Litros300 = Convert.ToString(Convert.ToDecimal(qP3) * 0.3M);
             }
@@ -111,11 +113,6 @@ namespace Unip.Tcc
             energ300.Text = _frmPrincipal.dataValues.Energ300;
             litros200.Text = _frmPrincipal.dataValues.Litros200;
             litros300.Text = _frmPrincipal.dataValues.Litros300;
-        }
-
-        private void ResetValues()
-        {
-            _frmPrincipal.dataValues = new();
         }
 
         private void GenerateExcel(object sender, EventArgs e)
@@ -156,20 +153,22 @@ namespace Unip.Tcc
             sheet.Cells["B4"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.QntProd200);
             sheet.Cells["B5"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.QntRej200);
             sheet.Cells["B6"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.Energ200);
-            sheet.Cells["B7"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.Litros200);
+            sheet.Cells["B7"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.Energ200Monetario);
+            sheet.Cells["B8"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.Litros200);
 
             sheet.Cells["C4"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.QntProd300);
             sheet.Cells["C5"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.QntRej300);
             sheet.Cells["C6"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.Energ300);
-            sheet.Cells["C7"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.Litros300);
+            sheet.Cells["C7"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.Energ300Monetario);
+            sheet.Cells["C8"].Value = Convert.ToDecimal(_frmPrincipal.dataValues.Litros300);
 
             var columnChart = sheet.Drawings.AddBarChart("crtExtensionsSize", eBarChartType.ColumnClustered3D);
             columnChart.SetSize(520, 310);
             columnChart.SetPosition(45, 255);
             columnChart.Title.Text = "";
-            columnChart.Series.Add(ExcelCellBase.GetAddress(4, 2, 7, 2), ExcelCellBase.GetAddress(4, 1, 7, 1));
+            columnChart.Series.Add(ExcelCellBase.GetAddress(4, 2, 8, 2), ExcelCellBase.GetAddress(4, 1, 8, 1));
             columnChart.Series[0].Header = "Garrafa 200mL";
-            columnChart.Series.Add(ExcelCellBase.GetAddress(4, 3, 7, 3), ExcelCellBase.GetAddress(4, 1, 7, 1));
+            columnChart.Series.Add(ExcelCellBase.GetAddress(4, 3, 8, 3), ExcelCellBase.GetAddress(4, 1, 8, 1));
             columnChart.Series[1].Header = "Garrafa 300mL";
 
             sheet.Cells[1, 1, 7, 7].AutoFitColumns();
@@ -188,8 +187,10 @@ namespace Unip.Tcc
             sheet.Cells["C3"].Value = "Garrafa 300mL";
             sheet.Cells["A4"].Value = "Quantidade Produzida";
             sheet.Cells["A5"].Value = "Quantidade Rejeitada";
-            sheet.Cells["A6"].Value = "Energia Gasta";
-            sheet.Cells["A7"].Value = "Litros Envazados";
+            sheet.Cells["A6"].Value = "Energia Gasta (kWh)";
+            sheet.Cells["A7"].Value = "Energia Gasta (R$)";
+            sheet.Cells["A8"].Value = "Litros Envazados";
+
 
             XLSHelper.SetRangeBorderAndBackground(sheet.Cells["A1"]);
             XLSHelper.FillBorders(sheet.Cells["A1:B1"]);
@@ -199,17 +200,41 @@ namespace Unip.Tcc
             XLSHelper.SetRangeAsHeader(sheet.Cells[3, 1, 3, 3]);
             XLSHelper.FillBorders(sheet.Cells[3, 1, 3, 3]);
 
-            XLSHelper.SetRangeAsHeader(sheet.Cells[3, 1, 7, 1]);
-            XLSHelper.FillBorders(sheet.Cells[3, 1, 7, 1]);
+            XLSHelper.SetRangeAsHeader(sheet.Cells[3, 1, 8, 1]);
+            XLSHelper.FillBorders(sheet.Cells[3, 1, 8, 1]);
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void ResetaValores(object sender, EventArgs e)
         {
             var port = _frmPrincipal.GetPortArduino();
             var command = "#RESETAR\n";
             port.Write(command);
 
-            ResetValues();
+            _frmPrincipal.dataValues = new();
+        }
+
+        private decimal CalculoEnergia(string retorno)
+        {
+            //Calculo executado com valores p/ mês de Novembro
+
+            var segundos = _frmPrincipal._timer;
+            var consumoForaPonta = (0.25M + 0.1506M) * segundos;
+            var consumoPonta = 0.26M * consumoForaPonta;
+            var bandeiraTarifaria = 0.142M * consumoForaPonta;
+            var cip = 6M;
+            var aliquotaICMS = 0.18M;
+            var aliquotaPIS = 0.368M;
+            var totalImpostos = (bandeiraTarifaria + consumoPonta) / (1 - aliquotaICMS - aliquotaPIS) * aliquotaPIS;
+            var totalMonetario = totalImpostos + cip + bandeiraTarifaria + consumoPonta;
+
+            if (retorno == "energia")
+            {
+                return Math.Round(consumoPonta, 2);
+            }
+            else
+            {
+                return Math.Round(totalMonetario, 2);
+            }
         }
     }
 }

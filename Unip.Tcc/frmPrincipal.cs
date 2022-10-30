@@ -7,7 +7,7 @@ namespace Unip.Tcc
     {
         #region Cronômetro
         State _state = State.Zerado;
-        decimal _timer = 0;
+        public decimal _timer = 0;
         public System.Windows.Forms.Timer aTimer = new();
         #endregion
 
@@ -374,8 +374,11 @@ namespace Unip.Tcc
         public string QntRej200 { get; set; } = "0";
         public string QntRej300 { get; set; } = "0";
         public string Energ200 { get; set; } = "0";
+        public string Energ200Monetario { get; set; } = "0";
         public string Energ300 { get; set; } = "0";
+        public string Energ300Monetario { get; set; } = "0";
         public string Litros200 { get; set; } = "0";
         public string Litros300 { get; set; } = "0";
+
     }
 }
