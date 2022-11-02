@@ -22,8 +22,8 @@
 #define sensorD 46 // infra-vermelho
 
 #define sensorE 44 // capacitivo
-#define sensorF 42 // capacitivo
-#define sensorG 40 // capacitivo
+#define sensorF 40 // capacitivo
+#define sensorG 42 // capacitivo
 
 // Variaveis
 int vel1 = 0;
@@ -31,6 +31,7 @@ bool esteira1Ligada = false;
 int vel2 = 0;
 bool esteira2Ligada = false;
 bool emEnvase = false;
+bool bombaLigada = false;
 int tamanhoGarrafa = 0;    // 0 é nenhuma, 1 é 200mL e 2 é 300mL
 String inputString = "";   // string bruta passada pelo programa
 String commandString = ""; // string refinada p/ comando
@@ -80,9 +81,22 @@ void setup()
 
 void loop()
 {
-    if (ChecagemTanque())
+    if (digitalRead(sensorG) == 0)
     {
-        ComandaBomba();
+        if (!bombaLigada)
+        {
+            bombaLigada = true;
+            digitalWrite(bomba, LOW);
+        }
+    }
+
+    if (digitalRead(sensorF) != 0)
+    {
+        if (bombaLigada)
+        {
+            bombaLigada = false;
+            digitalWrite(bomba, HIGH);
+        }
     }
 
     if (stringComplete)
@@ -408,28 +422,6 @@ void ExecutaEnvase()
     }
 }
 
-bool ChecagemTanque()
-{
-    if (digitalRead(sensorG) == 0)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-void ComandaBomba()
-{
-    // digitalWrite(bomba, LOW);
-
-    if (digitalRead(sensorF) != 0)
-    {
-        digitalWrite(bomba, HIGH);
-    }
-}
-
 void getCommand()
 {
     if (inputString.length() > 0)
@@ -467,7 +459,7 @@ void ComandaEsteira(int esteira, bool comando)
     {
         if (comando == 1)
         {
-            if(vel1 == 0) 
+            if (vel1 == 0)
             {
                 vel1 = 55;
             }
@@ -491,7 +483,7 @@ void ComandaEsteira(int esteira, bool comando)
     {
         if (comando == 1)
         {
-            if(vel2 == 0) 
+            if (vel2 == 0)
             {
                 vel2 = 220;
             }

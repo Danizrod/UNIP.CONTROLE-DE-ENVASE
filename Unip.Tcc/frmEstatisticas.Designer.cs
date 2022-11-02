@@ -49,10 +49,11 @@
             // 
             // button1
             // 
-            this.button1.BackColor = System.Drawing.Color.PaleGreen;
-            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.button1.BackColor = System.Drawing.Color.LimeGreen;
+            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.DarkGreen;
             this.button1.FlatAppearance.BorderSize = 3;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.button1.Location = new System.Drawing.Point(606, 207);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(120, 42);
@@ -79,9 +80,9 @@
             this.label2.ForeColor = System.Drawing.Color.White;
             this.label2.Location = new System.Drawing.Point(43, 72);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(192, 20);
+            this.label2.Size = new System.Drawing.Size(229, 20);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Quantidade Produzida:";
+            this.label2.Text = "Quantidade Produzida (un):";
             // 
             // label4
             // 
@@ -90,9 +91,9 @@
             this.label4.ForeColor = System.Drawing.Color.White;
             this.label4.Location = new System.Drawing.Point(43, 216);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(152, 20);
+            this.label4.Size = new System.Drawing.Size(179, 20);
             this.label4.TabIndex = 4;
-            this.label4.Text = "Litros Envazados:";
+            this.label4.Text = "Litros Envasados (L):";
             // 
             // label3
             // 
@@ -101,9 +102,9 @@
             this.label3.ForeColor = System.Drawing.Color.White;
             this.label3.Location = new System.Drawing.Point(43, 167);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(130, 20);
+            this.label3.Size = new System.Drawing.Size(170, 20);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Energia Gasta:";
+            this.label3.Text = "Energia Gasta (R$):";
             // 
             // label1
             // 
@@ -112,9 +113,9 @@
             this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(43, 120);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(189, 20);
+            this.label1.Size = new System.Drawing.Size(226, 20);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Quantidade Rejeitada:";
+            this.label1.Text = "Quantidade Rejeitada (un):";
             // 
             // label6
             // 
@@ -230,12 +231,14 @@
             // 
             // button2
             // 
+            this.button2.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.Location = new System.Drawing.Point(651, 69);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 17;
-            this.button2.Text = "Reset";
-            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Text = "Limpar";
+            this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.ResetaValores);
             // 
             // frmEstatisticas

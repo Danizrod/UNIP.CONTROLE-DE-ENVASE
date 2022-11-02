@@ -69,9 +69,9 @@ namespace Unip.Tcc
         {
             var port = _frmPrincipal.GetPortArduino();
             var command = "#CHECARDADOS\n";
-            //port.Write(command);
+            port.Write(command);
 
-            var resp = "GE2:0.GE3:0.GD2:0.GD3:0\r";//port.ReadLine();
+            var resp = port.ReadLine();
 
             SaveData(resp);
         }
@@ -109,8 +109,8 @@ namespace Unip.Tcc
             qntProd300.Text = _frmPrincipal.dataValues.QntProd300;
             qntRej200.Text = _frmPrincipal.dataValues.QntRej200;
             qntRej300.Text = _frmPrincipal.dataValues.QntRej300;
-            energ200.Text = _frmPrincipal.dataValues.Energ200;
-            energ300.Text = _frmPrincipal.dataValues.Energ300;
+            energ200.Text = _frmPrincipal.dataValues.Energ200Monetario;
+            energ300.Text = _frmPrincipal.dataValues.Energ300Monetario;
             litros200.Text = _frmPrincipal.dataValues.Litros200;
             litros300.Text = _frmPrincipal.dataValues.Litros300;
         }
@@ -189,7 +189,7 @@ namespace Unip.Tcc
             sheet.Cells["A5"].Value = "Quantidade Rejeitada";
             sheet.Cells["A6"].Value = "Energia Gasta (kWh)";
             sheet.Cells["A7"].Value = "Energia Gasta (R$)";
-            sheet.Cells["A8"].Value = "Litros Envazados";
+            sheet.Cells["A8"].Value = "Litros Envasados";
 
 
             XLSHelper.SetRangeBorderAndBackground(sheet.Cells["A1"]);
@@ -217,15 +217,15 @@ namespace Unip.Tcc
         {
             //Calculo executado com valores p/ mês de Novembro
 
-            var segundos = _frmPrincipal._timer;
+            var segundos = _frmPrincipal._timer / 3600M;
             var consumoForaPonta = (0.25M + 0.1506M) * segundos;
             var consumoPonta = 0.26M * consumoForaPonta;
-            var bandeiraTarifaria = 0.142M * consumoForaPonta;
             var cip = 6M;
             var aliquotaICMS = 0.18M;
-            var aliquotaPIS = 0.368M;
-            var totalImpostos = (bandeiraTarifaria + consumoPonta) / (1 - aliquotaICMS - aliquotaPIS) * aliquotaPIS;
-            var totalMonetario = totalImpostos + cip + bandeiraTarifaria + consumoPonta;
+            var aliquotaPIS = 0.0368M;
+            var totalImpostosICMS = consumoPonta / (1 - aliquotaPIS - aliquotaICMS) * aliquotaICMS;
+            var totalImpostosPIS = consumoPonta / (1 - aliquotaICMS - aliquotaPIS) * aliquotaPIS;
+            var totalMonetario = totalImpostosICMS + totalImpostosPIS + cip + consumoPonta;
 
             if (retorno == "energia")
             {
